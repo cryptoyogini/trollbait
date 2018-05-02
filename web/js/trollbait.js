@@ -42,7 +42,7 @@ function trollbait_classify(data){
     });
     
     var dlbutton = document.createElement("button");
-    dlbutton.innerHTML = "Download CSV";
+    dlbutton.innerHTML = "Download Your Work";
 
     // 2. Append somewhere
     var body = document.getElementsByTagName("body")[0];
@@ -50,53 +50,21 @@ function trollbait_classify(data){
 
     dlbutton.addEventListener ("click", function() {
         
-        downloadCSV({filename:"mywork.csv",
+        downloadJSON({filename:"mywork.json",
                     data:data2
                     })
     });
 
 }
 
-
-function convertArrayOfObjectsToCSV(args) {  
-        var result, ctr, keys, columnDelimiter, lineDelimiter, data;
-
-        data = args.data || null;
-        if (data == null || !data.length) {
-            return null;
-        }
-
-        columnDelimiter = args.columnDelimiter || ',';
-        lineDelimiter = args.lineDelimiter || '\n';
-
-        keys = Object.keys(data[0]);
-
-        result = '';
-        result += keys.join(columnDelimiter);
-        result += lineDelimiter;
-
-        data.forEach(function(item) {
-            ctr = 0;
-            keys.forEach(function(key) {
-                if (ctr > 0) result += columnDelimiter;
-
-                result += item[key];
-                ctr++;
-            });
-            result += lineDelimiter;
-        });
-
-        return result;
-    }
-
-
-function downloadCSV(args) {  
-        var csv = JSON2CSV(json);
+function downloadJSON(args) {  
+        //var csv = JSON2CSV(args.data);
+        var jsonstr = JSON.stringify(args.data)
         var downloadLink = document.createElement("a");
-        var blob = new Blob(["\ufeff", csv]);
+        var blob = new Blob(["\ufeff", jsonstr]);
         var url = URL.createObjectURL(blob);
         downloadLink.href = url;
-        downloadLink.download = "data.csv";
+        downloadLink.download = args.filename || "data.json";
 
         document.body.appendChild(downloadLink);
         downloadLink.click();

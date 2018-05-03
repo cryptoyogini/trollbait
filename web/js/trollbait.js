@@ -45,15 +45,23 @@ function trollbait_classify(data){
     nextbutton.type="submit"
     nextbutton.addEventListener ("click", function() {
         currentrec=data[myIndex]
-        console.log($("#is_sexist").val())
+        console.log($("#is_sexist").is(":checked"))
         currentrec['religion']=$("#religion").val()
-        currentrec['is_sexist']=$("#is_sexist").val()
+        currentrec['is_sexist']=$("#is_sexist").is(":checked")
+        currentrec['is_hatespeech']=$("#is_hatespeech").is(":checked")
+        currentrec['is_critical']=$("#is_critical").is(":checked")
+        currentrec['is_encouragement']=$("#is_encouragement").is(":checked")
+        currentrec['positivity']=parseInt($("#positivity").val())
         sessiondata.push(currentrec)
 		myIndex = (myIndex+1)%(data.length);
         classifierdiv.innerHTML=data[myIndex]['text_clean']
         classifierdiv.innerHTML+=""
         $("#religion").val("None")
-        
+        $("#is_sexist").attr("checked",false)
+        $("#is_hatespeech").attr("checked",false)
+        $("#is_critical").attr("checked",false)
+        $("#is_encouragement").attr("checked",false)
+        $("#positivity").val(0)
     });
     
  

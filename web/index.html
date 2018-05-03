@@ -21,16 +21,55 @@
 			<div>
 				<div id="texttoclassify"></div>
 			</div>
+            <br>
 			<div>
 				<label for="is_sexist">
-					<span class="required">Is the post sexist? *</span> <input type="checkbox" name="is_sexist" value="True" id="is_sexist">
+					
+                    <span class="required" >Is the post sexist? * </span>
 					<!--<input type="text" id="name" name="name" value="" placeholder="Your Name" required="required" tabindex="1" autofocus="autofocus" />-->
-				</label> 
+				<input type="checkbox" name="is_sexist" id="is_sexist">
+                </label> 
+                
 			</div>
-			
+            <div>
+				<label for="is_hatespeech">
+					
+                    <span class="required" >Does the post contain hate speech? * </span>
+					<!--<input type="text" id="name" name="name" value="" placeholder="Your Name" required="required" tabindex="1" autofocus="autofocus" />-->
+				<input type="checkbox" name="is_hatespeech" id="is_hatespeech">
+                </label> 
+                
+			</div>
+			<div>
+				<label for="is_critical">
+					
+                    <span class="required" >Is the post critical of someone or something? * </span>
+					<!--<input type="text" id="name" name="name" value="" placeholder="Your Name" required="required" tabindex="1" autofocus="autofocus" />-->
+				<input type="checkbox" name="is_critical" id="is_critical">
+                </label> 
+                
+			</div>
+			<div>
+				<label for="is_encouraging">
+					
+                    <span class="required" >Is the post encouraging someone or something? * </span>
+					<!--<input type="text" id="name" name="name" value="" placeholder="Your Name" required="required" tabindex="1" autofocus="autofocus" />-->
+				<input type="checkbox" name="is_encouragement" id="is_encouragement">
+                </label> 
+            
+                
+			</div>
+            <div>
+                 <label for="positivity">
+                <span class="required" >How positive or negative is the post in its tone (-10 to +10)* </span>
+               
+                    <input type="range"  name="positivity" id="positivity" value="0" min="-10" max="10" data-show-value="true">
+                </label>
+            </div>
+            
 			<div>		          
 		      <label for="Religion">
-		      <span>Religion: </span>
+		      <span>Which religion is the post biased towards? </span>
 			      <select id="religion" name="religion" tabindex="4">   
 			         <option value="None">None</option>
 			         <option value="Hinduism">Hinduism</option>

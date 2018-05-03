@@ -3,8 +3,7 @@ function log(message){
 	logdiv.innerHTML = "<br>"+ message;
 }
 
-$.getJSON( "ajax/test.json", function( data ) {})
-
+/*
 function trollbait_init(sheetkey){
     url="https://docs.google.com/spreadsheets/d/"+sheetkey+"/pubhtml"
     //log("Loading data...")
@@ -18,6 +17,13 @@ function trollbait_init(sheetkey){
                        trollbait_classify(data)
                    },
                    simpleSheet: true } )
+}
+*/
+function trollbait_init(jsonpath){
+
+    $.getJSON(jsonpath, function( data ) {
+        console.log(data)       
+    })
 }
 
 function trollbait_classify(data){

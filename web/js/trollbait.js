@@ -44,11 +44,13 @@ function trollbait_classify(data){
     nextbutton.innerHTML = "Next";
     nextbutton.type="submit"
     nextbutton.addEventListener ("click", function() {
-        
-        //sessiondata.push(data[myIndex.toString()])
-		console.log($("#religion").val())
-        myIndex = (myIndex+1)%(data.length);
-        classifierdiv.innerHTML=data[myIndex.toString()]['text_clean']
+        currentrec=data[myIndex]
+        console.log($("#is_sexist").val())
+        currentrec['religion']=$("#religion").val()
+        currentrec['is_sexist']=$("#is_sexist").val()
+        sessiondata.push(currentrec)
+		myIndex = (myIndex+1)%(data.length);
+        classifierdiv.innerHTML=data[myIndex]['text_clean']
         classifierdiv.innerHTML+=""
         $("#religion").val("None")
         
@@ -89,7 +91,7 @@ const downloadData = event => {
 };
 
 
-/*const classify = event => {
+const classify = event => {
   
   // Stop the form from submitting since we’re handling that with AJAX.
   event.preventDefault();
@@ -99,7 +101,7 @@ const downloadData = event => {
   console.log("Classifying")
   
 };
-*/
+
 
 function strftime(sFormat, date) {
   if (!(date instanceof Date)) date = new Date();

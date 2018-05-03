@@ -20,16 +20,19 @@ function trollbait_init(sheetkey){
 }
 */
 function trollbait_init(jsonpath){
-
+    console.log(jsonpath)
+    log("<center>Loading...<br><img src='img/glow.gif' height='60px' width='60px'><center>")   
     $.getJSON(jsonpath, function( data ) {
-        console.log(data)       
+        console.log(data[0])
+        log("Data loaded")
+        trollbait_classify(data)
     })
 }
 
 function trollbait_classify(data){
     classifierdiv=document.getElementById("classifier")
-    myIndex=0
-    classifierdiv.innerHTML=data[myIndex]['text_clean']
+    var myIndex=0
+    classifierdiv.innerHTML=data[myIndex.toString()]['text_clean']
     data2=[]
     var nextbutton = document.createElement("button");
     nextbutton.innerHTML = "Next";
@@ -40,10 +43,12 @@ function trollbait_classify(data){
 
     // 3. Add event handler
     nextbutton.addEventListener ("click", function() {
-        data2.push(data[myIndex])
+        console.log(data.length)
+        data2.push(data[myIndex.toString()])
         console.log(data2.length)
         myIndex = (myIndex+1)%(data.length);
-        classifierdiv.innerHTML=data[myIndex]['text_clean']
+        console.log(myIndex)
+        classifierdiv.innerHTML=data[myIndex.toString()]['text_clean']
         classifierdiv.innerHTML+=""
         
     });

@@ -14,59 +14,92 @@
 </head>
 <body>
 	<div id="contact-form">
+        <div>
+        <h1>Trollbait Machine Trainer</h1>
+            <h2>Training the machine to take down trolls!</h2>
+            <hr>
+        </div>
 		<p id="failure">Oopsie...message not sent.</p>  
 		<p id="success">Your message was sent successfully. Thank you!</p>
-			
+        
+        <div>
+            <h2>Classifier</h2>
 		<form id="classifier">
 			<div>
 				<div id="texttoclassify"></div>
 			</div>
             <br>
-			<div>
-				<label for="is_sexist">
+            <table style="margin:auto">
+		
+          
+
+		
+                <tr>
+                    <td >	
+                        <div>
+				            <label for="is_sexist">
 					
-                    <span class="required" >Is the post sexist? * </span>
-					<!--<input type="text" id="name" name="name" value="" placeholder="Your Name" required="required" tabindex="1" autofocus="autofocus" />-->
-				<input type="checkbox" name="is_sexist" id="is_sexist">
-                </label> 
+                            <span class="required" >Is the post sexist? * </span>
+					
+				            <input type="checkbox" name="is_sexist" id="is_sexist">
+                            </label> 
                 
-			</div>
-            <div>
-				<label for="is_hatespeech">
+			             </div>
+                    </td>
+                    <td>  
+                        <div>
+				            <label for="is_hatespeech">
+                            <span class="required" >Does the post contain hate speech? * </span>
 					
-                    <span class="required" >Does the post contain hate speech? * </span>
-					<!--<input type="text" id="name" name="name" value="" placeholder="Your Name" required="required" tabindex="1" autofocus="autofocus" />-->
-				<input type="checkbox" name="is_hatespeech" id="is_hatespeech">
-                </label> 
+				            <input type="checkbox" name="is_hatespeech" id="is_hatespeech">
+                            </label> 
                 
-			</div>
-			<div>
-				<label for="is_critical">
-					
-                    <span class="required" >Is the post critical of someone or something? * </span>
-					<!--<input type="text" id="name" name="name" value="" placeholder="Your Name" required="required" tabindex="1" autofocus="autofocus" />-->
-				<input type="checkbox" name="is_critical" id="is_critical">
-                </label> 
+			             </div>
+                    </td>
+                </tr>
+                    <td>
+                        <div>
+                            <label for="is_critical">
+
+                            <span class="required" >Is the post critical of someone or something? * </span>
+                            <input type="checkbox" name="is_critical" id="is_critical">
+                            </label> 
                 
-			</div>
-			<div>
-				<label for="is_encouraging">
+			             </div>
+                
+                    </td>
+                    <td>	
+                        <div>
+				            <label for="is_encouragement">
 					
-                    <span class="required" >Is the post encouraging someone or something? * </span>
-					<!--<input type="text" id="name" name="name" value="" placeholder="Your Name" required="required" tabindex="1" autofocus="autofocus" />-->
-				<input type="checkbox" name="is_encouragement" id="is_encouragement">
-                </label> 
+                                <span class="required" >Is the post encouraging someone or something? * </span>
+					               
+				                <input type="checkbox" name="is_encouragement" id="is_encouragement">
+                            </label> 
             
                 
-			</div>
-            <div>
+			             </div>
+                    </td>
+                <tr>
+                </tr>
+            <tr>
+            <td colspan="2">
+                <div>
                  <label for="positivity">
-                <span class="required" >How positive or negative is the post in its tone (-10 to +10)* </span>
+                <span class="required" >How positive or negative is the post in its tone *
+                    <br>
+                    (-10 to +10) 
+                     </span>
+                     <br><center>Positivity: <span id="posvalue"></span></center>
                
                     <input type="range"  name="positivity" id="positivity" value="0" min="-10" max="10" data-show-value="true">
-                </label>
+                    
+                    </label>
             </div>
-            
+            </td>    
+            </tr>
+           <tr>
+               <td colspan=2>
 			<div>		          
 		      <label for="Religion">
 		      <span>Which religion is the post biased towards? </span>
@@ -80,12 +113,23 @@
 			      </select>
 		      </label>
 			</div>
+               </td>
+               </tr> 
+             </table>
 			<div>		           
 				<div id="controls"></div>
-				<!--<button name="next" type="submit" id="next" >Next</button>--> 
 			</div>
+        
 		</form>
-		<div id="log"></div>
+            <hr>
+        </div>
+		
+        
+        <div>
+            <h4>Status</h4>
+            <div id="log"></div>
+        <hr>
+        </div>
 		<form id="sessionform">
 			<div>
 				<label for="name">
@@ -103,6 +147,7 @@
 				<button name="download" type="submit" id="download" >Download Data</button> 
 			</div>
 		</form>
+        <hr>
 	</div>
 	<script>
 			// Empty array to hold mydata from this session
@@ -111,11 +156,31 @@
 			jsonurl="data/cleandata.json"
 			//trollbait_init(sheetkey)
 		    trollbait_init(jsonurl)
+              $("#religion").val("None")
+                $("#is_sexist").prop("checked",false)
+                $("#is_hatespeech").prop("checked",false)
+                $("#is_critical").prop("checked",false)
+                $("#is_encouragement").prop("checked",false)
+                $("#positivity").val(0)
+            
 		    const sessionform = document.getElementById('sessionform');
 			sessionform.addEventListener('submit', downloadData);
 			const classifier = document.getElementById('classifier');
 			classifier.addEventListener('submit', classify);
+            var slider = document.getElementById("positivity");
+            var output = document.getElementById("posvalue");
+            output.innerHTML = "<strong><span style='color:green'>" + slider.value+"</span></strong>";
 
+            slider.oninput = function() {
+                if (this.value<0){
+                    
+                
+                        output.innerHTML = "<strong><span style='color:red'>" +this.value+"</span></strong>";
+                    }
+                else{
+                        output.innerHTML = "<strong><span style='color:green'>" +this.value+"</span></strong>";
+                }
+            }
 	</script>
 </body>
 </html>

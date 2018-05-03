@@ -20,10 +20,9 @@ function trollbait_init(sheetkey){
 }
 */
 function trollbait_init(jsonpath){
-    console.log(jsonpath)
+   
     log("<center>Loading...<br><img src='img/glow.gif' height='60px' width='60px'><center>")   
     $.getJSON(jsonpath, function( data ) {
-        console.log(data[0])
         log("Data loaded")
         trollbait_classify(data)
         
@@ -38,14 +37,22 @@ function trollbait_classify(data){
     
     
     
-    classifierdiv.innerHTML=data[myIndex.toString()]['text_clean']
+    classifierdiv.innerHTML=data[myIndex]['text_clean']
+    $("#religion").val("None")
+    $("#is_sexist").prop("checked",false)
+    $("#is_hatespeech").prop("checked",false)
+    $("#is_critical").prop("checked",false)
+    $("#is_encouragement").prop("checked",false)
+    $("#positivity").val(0)
+    
+    
+    
     // Create a button to go to the next record
     var nextbutton = document.createElement("button");
     nextbutton.innerHTML = "Next";
     nextbutton.type="submit"
     nextbutton.addEventListener ("click", function() {
         currentrec=data[myIndex]
-        console.log($("#is_sexist").is(":checked"))
         currentrec['religion']=$("#religion").val()
         currentrec['is_sexist']=$("#is_sexist").is(":checked")
         currentrec['is_hatespeech']=$("#is_hatespeech").is(":checked")
@@ -57,10 +64,10 @@ function trollbait_classify(data){
         classifierdiv.innerHTML=data[myIndex]['text_clean']
         classifierdiv.innerHTML+=""
         $("#religion").val("None")
-        $("#is_sexist").attr("checked",false)
-        $("#is_hatespeech").attr("checked",false)
-        $("#is_critical").attr("checked",false)
-        $("#is_encouragement").attr("checked",false)
+        $("#is_sexist").prop("checked",false)
+        $("#is_hatespeech").prop("checked",false)
+        $("#is_critical").prop("checked",false)
+        $("#is_encouragement").prop("checked",false)
         $("#positivity").val(0)
     });
     
@@ -92,7 +99,6 @@ const downloadData = event => {
   // TODO: Call our function to get the form data.
 
   var fname=$("#name").val()+"-"+strftime("%Y%m%d-%H%M%S")+".json"
-  console.log(fname)
   downloadJSON({filename:fname,
                       data:sessiondata
                     })
@@ -106,7 +112,6 @@ const classify = event => {
   
   // TODO: Call our function to get the form data.
 
-  console.log("Classifying")
   
 };
 

@@ -30,18 +30,20 @@ function trollbait_init(jsonpath){
 }
 
 function trollbait_classify(data){
-    classifierdiv=document.getElementById("classifier")
+    // Initialize some variables
+    var body = document.getElementsByTagName("body")[0];
+    var classifierdiv=document.getElementById("classifier")
     var myIndex=0
-    classifierdiv.innerHTML=data[myIndex.toString()]['text_clean']
+    
+    // Empty array to hold mydata from this session
     data2=[]
+    
+    
+    classifierdiv.innerHTML=data[myIndex.toString()]['text_clean']
+    // Create a button to go to the next record
     var nextbutton = document.createElement("button");
     nextbutton.innerHTML = "Next";
-
-    // 2. Append somewhere
-    var body = document.getElementsByTagName("body")[0];
-    body.appendChild(nextbutton);
-
-    // 3. Add event handler
+    
     nextbutton.addEventListener ("click", function() {
         console.log(data.length)
         data2.push(data[myIndex.toString()])
@@ -53,20 +55,20 @@ function trollbait_classify(data){
         
     });
     
+    // Create a button to download our data
     var dlbutton = document.createElement("button");
     dlbutton.innerHTML = "Download Your Work";
-
-    // 2. Append somewhere
-    var body = document.getElementsByTagName("body")[0];
-    body.appendChild(dlbutton);
-
     dlbutton.addEventListener ("click", function() {
         
         downloadJSON({filename:"mywork.json",
-                    data:data2
+                      data:data2
                     })
     });
-
+    
+    // Add buttons to body
+    body.appendChild(nextbutton);
+    body.appendChild(dlbutton);
+    
 }
 
 function downloadJSON(args) {  

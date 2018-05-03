@@ -18,6 +18,25 @@
         <h1>Trollbait Machine Trainer</h1>
             <h2>Training the machine to take down trolls!</h2>
             <hr>
+           
+            <p>Hola! So you want to help us catch some trolls? Great!</p>
+            <p>Before we get there, we need to train our "sentinels"</p>
+            <p>To help train</p>
+            <ol>
+            <li>Read the text in the white back ground</li>
+            <li>Provide your opinion using the form below it</li>
+            <li>Click the "Next" button to get the next text </li>
+            <li>Repeat the above steps as often as you possibly can!</li>
+            <li>When you get bored or tired or pissed off scroll down to the section "Finishing up!" and
+                <ol>
+                    <li>Fill in your name (any name will do)</li>
+                    <li>Click "Download Data</li>
+                    <li>Save the file that downloads</li>
+                    <li>Send the file to us!</li>
+                </ol>
+            </li>
+            </ol>
+            <hr>
         </div>
 		<p id="failure">Oopsie...message not sent.</p>  
 		<p id="success">Your message was sent successfully. Thank you!</p>
@@ -130,24 +149,21 @@
             <div id="log"></div>
         <hr>
         </div>
-		<form id="sessionform">
-			<div>
-				<label for="name">
-					<span class="required">Name: *</span> 
-					<input type="text" id="name" name="name" value="" placeholder="Your Name" required="required" tabindex="1" autofocus="autofocus" />
-				</label> 
-			</div>
-			<div>
-				<label for="email">
-					<span class="required">Email: *</span>
-					<input type="email" id="email" name="email" value="" placeholder="Your Email" tabindex="2" required="required" />
-				</label>  
-			</div>
-			<div>		           
-				<button name="download" type="submit" id="download" >Download Data</button> 
-			</div>
-		</form>
-        <hr>
+        <div>
+            <h1>Finish up!</h1>
+            <form id="sessionform">
+                <div>
+                    <label for="name">
+                        <span class="required">Name: *</span> 
+                        <input type="text" id="name" name="name" value="" placeholder="Your Name" required="required" tabindex="1" autofocus="autofocus" />
+                    </label> 
+                </div>
+               <div>		           
+                    <button name="download" type="submit" id="download" >Download Data</button> 
+                </div>
+            </form>
+            <hr>
+            </div>
 	</div>
 	<script>
 			// Empty array to hold mydata from this session

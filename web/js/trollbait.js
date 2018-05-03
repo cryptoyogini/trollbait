@@ -60,6 +60,7 @@ function trollbait_classify(data){
         currentrec['is_encouragement']=$("#is_encouragement").is(":checked")
         currentrec['positivity']=parseInt($("#positivity").val())
         sessiondata.push(currentrec)
+        log(sessiondata.length.toString()+" posts classified!")
 		myIndex = (myIndex+1)%(data.length);
         classifierdiv.innerHTML=data[myIndex]['text_clean']
         classifierdiv.innerHTML+=""
@@ -69,6 +70,9 @@ function trollbait_classify(data){
         $("#is_critical").prop("checked",false)
         $("#is_encouragement").prop("checked",false)
         $("#positivity").val(0)
+        document.getElementById("posvalue");
+        output.innerHTML = "<strong><span style='color:green'>" + $("#positivity").val()+"</span></strong>";
+
     });
     
  

@@ -31,7 +31,7 @@ h4{
 
 #texttoclassify{
      padding: 10px 20px 30px 20px;
-  
+    word-wrap:break-word;
     background-color: whitesmoke;
     font-size: 35px;
     color: firebrick;

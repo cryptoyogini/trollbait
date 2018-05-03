@@ -3,6 +3,7 @@ function log(message){
 	logdiv.innerHTML = "<br>"+ message;
 }
 
+$.getJSON( "ajax/test.json", function( data ) {})
 
 function trollbait_init(sheetkey){
     url="https://docs.google.com/spreadsheets/d/"+sheetkey+"/pubhtml"

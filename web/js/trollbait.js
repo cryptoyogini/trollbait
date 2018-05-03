@@ -33,8 +33,8 @@ function trollbait_classify(data){
     // Initialize some variables
     //var controls = document.getElementById("controls");
     var classifierdiv=document.getElementById("texttoclassify")
-    var myIndex=0
-    
+    //var myIndex=0
+    var myIndex=getRandomInt(0,data.length-1)
     
     
     classifierdiv.innerHTML=data[myIndex]['text_clean']
@@ -183,4 +183,7 @@ function strftime(sFormat, date) {
       '%Z': date.toTimeString().replace(/.+\((.+?)\)$/, '$1')
     }[sMatch] || sMatch;
   });
+}
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }

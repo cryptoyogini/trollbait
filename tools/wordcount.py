@@ -64,18 +64,17 @@ def wordcount(ipath,opath):
             
                 # monitor progress
                 chunkNumber += 1
-                sys.stdout.write('Processing chunk {} of {} \r'
-                                 .format(chunkNumber, totalChunks))
-                sys.stdout.flush()
+                #sys.stdout.write('Processing chunk {} of {} \r'.format(chunkNumber, totalChunks))
+                #sys.stdout.flush()
             
                 # read text
                 rawText = file.read(chunkSize)
             
                 # don't split last word
-                separators = [' ', '\r', '\n']
-                if chunkNumber < totalChunks:
-                    while rawText[-1] not in separators:
-                        rawText = rawText + file.read(1)
+                #separators = [' ', '\r', '\n']
+                #if chunkNumber < totalChunks:
+                #    while rawText[-1] not in separators:
+                #        rawText = rawText + file.read(1)
                 
                 # decode text
                 decodedText = rawText.decode('utf8')

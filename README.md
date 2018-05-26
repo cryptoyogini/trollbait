@@ -10,3 +10,4 @@ This currently has two files
 `wordcount.py` - which counts words in Hindi. 
 
 TODO @Karan - Please link the repo that the wordcounter was modified from 
+Tracking other TODOS in issues

@@ -22,7 +22,8 @@ replycount=re.compile(replycountre)
 
 twitterhandlere=r'(@\w{1,15})\b'
 twitterhandle=re.compile(twitterhandlere)
-
+timestampre=r'([0-9]+:[0-9]{2}\s[APM]{2}\s-\s[0-9]{2}\s[a-z,A-Z]{3}\s[0-9]{4})'
+timestamp=re.compile(timestampre)
 #ipath ='/home/lilhack110/wordcount/' # input folder
 #opath = '/home/lilhack110/wordcount/' # output folder
 
@@ -62,14 +63,16 @@ def wordcount(text):
     return wordFreq
 
 def clean(rawText):
-    pass1 = rawText.decode('utf8').replace("\n"," ")
+    #rawText=rawText.decode('utf8')
+    pass1 = rawText.replace("\n"," ")
     pass2 = likecount.sub("",pass1)
     pass3 = replycount.sub("",pass2)
     pass4 = twitterhandle.sub("",pass3)
     pass5 = retweetcount.sub("",pass4)
-    pass6 = re.sub(" +"," ",pass5).replace("follow request from","")
+    pass6 = timestamp.sub("",pass5).replace("follow request from","").replace("More Copy link to Tweet","").replace("Embed Tweet","").replace("Embed Video","")
+    pass7 = re.sub(" +"," ",pass6)
     
-    return pass6
+    return pass7
 
 def analyze(rawText):
     analysis={}

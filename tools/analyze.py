@@ -69,8 +69,8 @@ def clean(rawText):
     pass3 = replycount.sub("",pass2)
     pass4 = twitterhandle.sub("",pass3)
     pass5 = retweetcount.sub("",pass4)
-    pass6 = timestamp.sub("",pass5).replace("follow request from","").replace("More Copy link to Tweet","").replace("Embed Tweet","").replace("Embed Video","")
-    pass7 = re.sub(" +"," ",pass6)
+    pass6 = timestamp.sub("",pass5).replace("follow request from","").replace("Embed Tweet","").replace("Embed Video","")
+    pass7 = re.sub(" +"," ",pass6).replace("More Copy link to Tweet","")
     
     return pass7
 

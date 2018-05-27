@@ -16,7 +16,7 @@ likecountre=r'([0-9,]+\slike[s]*)|([Ll]ike[d]*\s*[0-9]*)'
 likecount=re.compile(likecountre)
 
 
-replycountre=r'([0-9,]+\sreply|[0-9,]+\sreplies)'
+replycountre=r'([0-9,]*\s*[Rr]eply\s+[0-9]*|[0-9,]*\s*[Rr]eplies\s+[0-9]*)'
 replycount=re.compile(replycountre)     
 
 

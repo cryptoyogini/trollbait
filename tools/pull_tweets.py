@@ -64,10 +64,14 @@ for name in names_journalists:
 
     all_tweets=get_tweets_for_handle(name,500)
     alltweets.append(all_tweets)
-alltweets= pandas.DataFrame(alltweets)
-for tweets in alltweets.columns:
-    with open(str(names_journalists)+'.txt', 'w') as tweet:
-        json.dump(alltweets,tweet)
+
+#for tweets in alltweets:
+ #   for names in names_journalists:
+  #      with open(names_journalists+'.txt', 'w') as tweet:
+        
+   #         json.dump(alltweets,tweet)
+        
+   
         
     
      

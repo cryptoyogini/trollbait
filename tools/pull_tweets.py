@@ -5,7 +5,15 @@ Created on Tue May 29 12:32:54 2018
 
 @author: lilhack110
 """
-names_journalists=['sudhirchaudhary',
+#removed neha pant from the list as it was not producing any output
+names_journalists=[
+'romanaisarkhan',
+'anjanaomkashyap',
+'SwetaSinghAT',
+'RubikaLiyaquat',
+'SharmaKadambini',
+'poornima_mishra',
+'avasthiaditi','sudhirchaudhary',
 'sardanarohit',
 'KishoreAjwani',
 'ravishndtv',
@@ -14,18 +22,9 @@ names_journalists=['sudhirchaudhary',
 'RajatSharmaLive',
 'awasthis',
 'abhisar_sharma',
-'dibang',
-'nehapant1',
-'romanaisarkhan',
-'anjanaomkashyap',
-'SwetaSinghAT',
-'RubikaLiyaquat',
-'NidhiKNDTV',
-'NaghmaNDTV',
-'SharmaKadambini',
-'poornima_mishra',
-'avasthiaditi']
-import json,time
+'dibang']
+names_femalejounalists=[]
+import json,time,pandas
 from twython import Twython
 #from twython import TwythonStreamer
 TWITTER_APP_KEY = 'Cc9kj80mLNobWn2swX12HHt2L'
@@ -49,7 +48,7 @@ def get_tweets_for_handle(handle, tcount, maxtries=10):
     while len(tweets)<tcount:
         
         tweets=tweets+p
-        p=t.search(q='@ravishndtv',count=100,max_id=p[-1]['id'])['statuses']
+        p=t.search(q='@'+handle,count=100,max_id=p[-1]['id'])['statuses']
         print "Sleeping..."
         time.sleep(5)
         print len(tweets)
@@ -58,14 +57,23 @@ def get_tweets_for_handle(handle, tcount, maxtries=10):
             break
         
     return tweets[:tcount]
+alltweets=[]
 for name in names_journalists:
-    time.sleep(10)
+
     
+
     all_tweets=get_tweets_for_handle(name,500)
-    time.sleep(10)
-with open('alltweets.txt', 'w') as tweet:
+    alltweets.append(all_tweets)
+alltweets= pandas.DataFrame(alltweets)
+for tweets in alltweets.columns:
+    with open(str(names_journalists)+'.txt', 'w') as tweet:
+        json.dump(alltweets,tweet)
+        
     
-    json.dump(all_tweets,tweet)
+     
+
+
+
     
 
 

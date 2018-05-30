@@ -61,7 +61,8 @@ def get_tweets_for_handle(handle, tcount, maxtries=10):
 for name in names_journalists:
     time.sleep(10)
     
-    all_tweets=get_tweets_for_handle(name,500) 
+    all_tweets=get_tweets_for_handle(name,500)
+    time.sleep(10)
 with open('alltweets.txt', 'w') as tweet:
     
     json.dump(all_tweets,tweet)

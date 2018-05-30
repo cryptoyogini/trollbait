@@ -25,9 +25,9 @@ names_journalists=['sudhirchaudhary',
 'SharmaKadambini',
 'poornima_mishra',
 'avasthiaditi']
-import json
+import json,time
 from twython import Twython
-from twython import TwythonStreamer
+#from twython import TwythonStreamer
 TWITTER_APP_KEY = 'Cc9kj80mLNobWn2swX12HHt2L'
 TWITTER_APP_KEY_SECRET = 'nPPwwP9ZZHwdMs1r7vzwemMvuLI7pjBsyly951EfjzTrO2MGpK'
 TWITTER_ACCESS_TOKEN = '90339443-NXHrWJ6i3IJGJ7hmNWWUUjzrkBhPsW4lEH36AGtko'
@@ -41,35 +41,19 @@ t = Twython(app_key=TWITTER_APP_KEY,
             oauth_token=TWITTER_ACCESS_TOKEN, 
             oauth_token_secret=TWITTER_ACCESS_TOKEN_SECRET)
 
-search = t.search(q='RajatSharmaLive', 
-                    
-                  
-                    )
 
-tweets = search['statuses']
-count=000
-for tweet in tweets:
-    count+=1
-    print tweet['id_str'], '\n', tweet['text'], '\n\n\n'
-#with open('tweets.txt', 'w') as f:geocode='-74,40,-73,41',
-                    
-  #json.dump(data, f, ensure_ascii=False)
-
-class MyStreamer(TwythonStreamer):
-  tweets=[] 
-  def on_success(self, data):
-    if 'text' in data:
-        tweet= data['text'].encode('utf-8')
-        if 'Accounting' in tweet:
-          tweets.append(tweet)
-          print tweet
-
-  def on_error(self, status_code, data):
-    print status_code
-    self.disconnect()
-
-stream = MyStreamer(APP_KEY, APP_SECRET,
-                    OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
-
-
-stream.statuses.filter()
+def get_tweets_for_handle(handle, tcount, maxtries=10):
+    tweets=[]
+    p=t.search(q=handle,count=tcount)['statuses']
+    tries=0
+    while len(tweets)<tcount:
+        tweets=tweets+p
+        p=t.search(q='@ravishndtv',count=100,max_id=p[-1]['id'])['statuses']
+        print "Sleeping..."
+        time.sleep(5)
+        print len(tweets)
+        tries+=1
+        if(tries>maxtries):
+            break
+        
+    return tweets[:tcount]

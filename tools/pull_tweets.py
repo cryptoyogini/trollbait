@@ -47,6 +47,7 @@ def get_tweets_for_handle(handle, tcount, maxtries=10):
     p=t.search(q=handle,count=tcount)['statuses']
     tries=0
     while len(tweets)<tcount:
+        
         tweets=tweets+p
         p=t.search(q='@ravishndtv',count=100,max_id=p[-1]['id'])['statuses']
         print "Sleeping..."
@@ -57,3 +58,16 @@ def get_tweets_for_handle(handle, tcount, maxtries=10):
             break
         
     return tweets[:tcount]
+for name in names_journalists:
+    time.sleep(10)
+    
+    all_tweets=get_tweets_for_handle(name,500) 
+with open('alltweets.txt', 'w') as tweet:
+    
+    json.dump(all_tweets,tweet)
+    
+
+
+    
+    
+    

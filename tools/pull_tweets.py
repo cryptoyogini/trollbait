@@ -61,7 +61,7 @@ def get_tweets_for_handle(handle, tcount, maxtries=10):
 alltweets=[]
 for name in names_journalists:
     all_tweets=get_tweets_for_handle(name,500)
-    alltweets.append(all_tweets)
+    alltweets=alltweets+all_tweets
 
 #for tweets in alltweets:
  #   for names in names_journalists:

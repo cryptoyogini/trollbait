@@ -6,14 +6,15 @@ Created on Tue May 29 12:32:54 2018
 @author: lilhack110
 """
 #removed neha pant from the list as it was not producing any output
-names_journalists=[
+names_femalejournalists=[
 'romanaisarkhan',
 'anjanaomkashyap',
 'SwetaSinghAT',
 'RubikaLiyaquat',
 'SharmaKadambini',
-'poornima_mishra',
-'avasthiaditi','sudhirchaudhary',
+'poornima_mishra',]
+
+names_malejonrallists=['avasthiaditi','sudhirchaudhary',
 'sardanarohit',
 'KishoreAjwani',
 'ravishndtv',
@@ -59,9 +60,6 @@ def get_tweets_for_handle(handle, tcount, maxtries=10):
     return tweets[:tcount]
 alltweets=[]
 for name in names_journalists:
-
-    
-
     all_tweets=get_tweets_for_handle(name,500)
     alltweets.append(all_tweets)
 

@@ -13,15 +13,18 @@ sys.path.append("/opt/livingdata/lib")
     #anandafb=ananda.get_fb_browser()
 
 
-def get_tweet_density(tw,screen_name):
+def get_mention_density(tw,screen_name,logger=xetrapal.astra.baselogger):
+    xetrapal.karma.wait("short")
     last100=get_last_100_mentions(tw,screen_name)
     if "created_at" in last100.columns:
         last100['createdts']=last100.created_at.apply(lambda x:datetime.datetime.strptime(x.replace("+0000","UTC"),"%a %b %d %H:%M:%S %Z %Y"))
         m=last100.createdts.max()-last100.createdts.min()
-        print m
-        density=len(last100)/math.ceil(m.total_seconds()/3600)
-        print screen_name,density
-        
+    
+        if m.total_seconds()>0:
+            density=len(last100)/math.ceil(m.total_seconds()/3600)
+        else:
+            density=0
+        logger.info(screen_name+" "+str(len(last100))+" tweets in "+str(m.total_seconds())+" seconds, meaning density of "+str(density)+" tweets per hour")
         return density
     else:
         return 0

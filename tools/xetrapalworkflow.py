@@ -80,3 +80,9 @@ anandatw=ananda.get_twython()
 anandagd=ananda.get_googledriver()
 twconfig=xetrapal.karma.get_section(ananda.config,"Twython")
 tweep=get_tweepy(twconfig)
+userlist=["BDUTT","sagarikaghose","vikramchandra","sardesairajdeep","AmolSharmaWsj","SachinKalbag","madversity","cricketwallah","Kanchangupta","Rahulkanwal","SushilaChanu","M_Raj03","sinha_arunima","NungshiTashi","lavsmohan","snigdhapoonam ","anniezaidi ‏","counselloranna","nilanjanaroy","DeShobhaa ","anand_ishita","ananya_birla ","monikamanchanda ‏","doodlenomics ","saffrontrail ‏","iamrana ‏","poojadhingraa ","D_Roopa_IPS","mehartweets","TrishaBShetty","maryashakil","dhanyarajendran ","shreyilaanasuya ‏","natashabadhwar ‏","sheljasen","MissMalini ‏","richa_singh","SushmaSwaraj ","divyaspandana","amritabhinder"]
+p=build_userdf(tweep,userlist)
+p['tweetdensity']=p.screen_name.apply((lambda x:get_mention_density(anandatw,x,logger=ananda.logger)))
+p
+p.to_csv("xetrapal-data/trollbait1_0/allusersfull.csv",encoding="utf-8")
+p.to_csv("/home/ananda/ab/xetrapal-data/trollbait1_0/allusersfull.csv",encoding="utf-8")

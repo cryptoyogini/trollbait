@@ -5,33 +5,55 @@ import tweepy
 import pandas
 import datetime
 import math
+import json
+from sklearn.feature_extraction.text import CountVectorizer 
 
 sys.path.append("/opt/livingdata/lib")
 
 
-
-    #anandafb=ananda.get_fb_browser()
-
+def get_twitter_ts(string):
+    return datetime.datetime.strptime(string.replace("+0000","UTC"),"%a %b %d %H:%M:%S %Z %Y")
+    
+def get_age(createdts):
+    now=datetime.datetime.now()
+    age=now-createdts
+    return math.ceil(age.total_seconds()/3600)
 
 def get_mention_density(tw,screen_name,logger=xetrapal.astra.baselogger):
-    xetrapal.karma.wait("short")
-    last100=get_last_100_mentions(tw,screen_name)
+    last100=xetrapal.twkarmas.twython_get_ntweets_for_search(tw,"@"+screen_name,tcount=100)
+    last100=pandas.DataFrame(last100)
     if "created_at" in last100.columns:
-        last100['createdts']=last100.created_at.apply(lambda x:datetime.datetime.strptime(x.replace("+0000","UTC"),"%a %b %d %H:%M:%S %Z %Y"))
-        m=last100.createdts.max()-last100.createdts.min()
-    
-        if m.total_seconds()>0:
-            density=len(last100)/math.ceil(m.total_seconds()/3600)
+        #last100['createdts']=last100.created_at.apply(lambda x:datetime.datetime.strptime(x.replace("+0000","UTC"),"%a %b %d %H:%M:%S %Z %Y"))
+        last100['createdts']=last100.created_at.apply(get_twitter_ts)
+        #m=last100.createdts.max()-last100.createdts.min()
+        if len(last100)<100:
+            logger.info("Account "+screen_name+" has less than 100 mentions")
         else:
-            density=0
-        logger.info(screen_name+" "+str(len(last100))+" tweets in "+str(m.total_seconds())+" seconds, meaning density of "+str(density)+" tweets per hour")
-        return density
+            logger.info("Account "+screen_name+" has more than 100 mentions")
+        logger.info("Calculating density as number of mentions divided by  hours since oldest mention or 100th oldest mention")
+        m=get_age(last100.createdts.min())
+        density=len(last100)/m
+        return round(density,3)
     else:
         return 0
-def get_last_100_mentions(tw,screen_name):
-    tweets=tw.search(q="@"+screen_name,count=100)['statuses']
-    tweetsdf=pandas.DataFrame(tweets)
-    return tweetsdf
+
+def get_tweet_density(tw,screen_name,logger=xetrapal.astra.baselogger):
+    last100=tw.get_user_timeline(screen_name=screen_name,count=100)
+    last100=pandas.DataFrame(last100)
+    if "created_at" in last100.columns:
+        #last100['createdts']=last100.created_at.apply(lambda x:datetime.datetime.strptime(x.replace("+0000","UTC"),"%a %b %d %H:%M:%S %Z %Y"))
+        last100['createdts']=last100.created_at.apply(get_twitter_ts)
+        #m=last100.createdts.max()-last100.createdts.min()
+        if len(last100)<100:
+            logger.info("Account "+screen_name+" has less than 100 tweets")
+        else:
+            logger.info("Account "+screen_name+" has more than 100 mentions")
+        logger.info("Calculating density as number of tweets divided or 100 by hours since oldest tweet or 100th oldest tweet")
+        m=get_age(last100.createdts.min())
+        density=len(last100)/m
+        return round(density,3)
+    else:
+        return 0
 
 
 def get_tweepy(twconfig,logger=xetrapal.astra.baselogger):
@@ -74,15 +96,36 @@ def build_userdf(tweep,userlist,logger=xetrapal.astra.baselogger):
     p=p.drop_duplicates(subset=['screen_name'])
     return p    
 
+def ngramcounter(series):
+    word_vectorizer = CountVectorizer(ngram_range=(1,5), analyzer='word')
+    sparse_matrix = word_vectorizer.fit_transform(series)
+    frequencies=sum(sparse_matrix).toarray()[0] 
+    freqdf=pandas.DataFrame(frequencies, index=word_vectorizer.get_feature_names(), columns=['freq']).sort_values(by='freq')
+    return freqdf
+
 
 ananda=xetrapal.Xetrapal(configfile="/home/ananda/ab/ab.conf")
 anandatw=ananda.get_twython()
 anandagd=ananda.get_googledriver()
 twconfig=xetrapal.karma.get_section(ananda.config,"Twython")
 tweep=get_tweepy(twconfig)
-userlist=["BDUTT","sagarikaghose","vikramchandra","sardesairajdeep","AmolSharmaWsj","SachinKalbag","madversity","cricketwallah","Kanchangupta","Rahulkanwal","SushilaChanu","M_Raj03","sinha_arunima","NungshiTashi","lavsmohan","snigdhapoonam ","anniezaidi ‏","counselloranna","nilanjanaroy","DeShobhaa ","anand_ishita","ananya_birla ","monikamanchanda ‏","doodlenomics ","saffrontrail ‏","iamrana ‏","poojadhingraa ","D_Roopa_IPS","mehartweets","TrishaBShetty","maryashakil","dhanyarajendran ","shreyilaanasuya ‏","natashabadhwar ‏","sheljasen","MissMalini ‏","richa_singh","SushmaSwaraj ","divyaspandana","amritabhinder"]
+trollbaitsheet=anandagd.open_by_key(key="1zisiKnhF4cEW4H7fvhpZ7Y8cGfwQybvGgDg6Jnth5j4")
+
+
+'''
 p=build_userdf(tweep,userlist)
-p['tweetdensity']=p.screen_name.apply((lambda x:get_mention_density(anandatw,x,logger=ananda.logger)))
-p
-p.to_csv("xetrapal-data/trollbait1_0/allusersfull.csv",encoding="utf-8")
-p.to_csv("/home/ananda/ab/xetrapal-data/trollbait1_0/allusersfull.csv",encoding="utf-8")
+men=trollbaitsheet.worksheet_by_title("men")
+women=trollbaitsheet.worksheet_by_title("women")
+men =men.get_as_df()
+women=women.get_as_df()
+for woman in women.screen_name:
+    last500=xetrapal.twkarmas.twython_get_ntweets_for_search(anandatw,"@"+woman,logger=ananda.logger,tcount=500)
+    with open("/home/arjun/av//xetrapal-data/trollbait1_1/"+woman+".json","w") as f:
+        f.write(json.dumps(last500))
+
+for man in men.screen_name:
+    last500=xetrapal.twkarmas.twython_get_ntweets_for_search(anandatw,"@"+man,logger=ananda.logger,tcount=500)
+    with open("/home/ananda/ab/xetrapal-data/trollbait1_0/"+man+".json","w") as f:
+        f.write(json.dump(last500))
+'''
+

@@ -59,15 +59,18 @@ def get_tweets_for_handle(handle, tcount, maxtries=10):
         
     return tweets[:tcount]
 alltweets=[]
-for name in names_journalists:
+for name in names_femalejournalists:
     all_tweets=get_tweets_for_handle(name,500)
     alltweets=alltweets+all_tweets
 
 #for tweets in alltweets:
- #   for names in names_journalists:
-  #      with open(names_journalists+'.txt', 'w') as tweet:
+ #   for names in names_journali
+with open('womantweets.json', 'w') as tweet:
+     
+     json.dump(alltweets,tweet)
+     
         
-   #         json.dump(alltweets,tweet)
+           
         
    
         

@@ -1,4 +1,4 @@
-import sys
+import sys,os
 sys.path.append("/opt/xetrapal")
 import xetrapal
 import tweepy
@@ -7,7 +7,7 @@ import datetime
 import math
 import json
 from sklearn.feature_extraction.text import CountVectorizer 
-
+from tqdm import tqdm
 sys.path.append("/opt/livingdata/lib")
 
 
@@ -103,6 +103,25 @@ def ngramcounter(series):
     freqdf=pandas.DataFrame(frequencies, index=word_vectorizer.get_feature_names(), columns=['freq']).sort_values(by='freq')
     return freqdf
 
+def get_1000_mentions(tw,persondf,logger=xetrapal.astra.baselogger):
+    for person in tqdm(persondf.itertuples(),position=1):
+        if  allusers.loc[allusers.screen_name==person.screen_name,'gotmentions'].item()=="":
+            logger.info("Getting 1000 mentions or max for "+person.screen_name)
+            last1000=xetrapal.twkarmas.twython_get_ntweets_for_search(tw,"@"+person.screen_name,logger=logger,tcount=1000)
+            try:
+                with open("/home/ananda/ab/xetrapal-data/trollbait1_0/"+person.screen_name+".json","w") as f:
+                    f.write(json.dumps(last1000))
+                logger.info("Wrote file /home/ananda/ab/xetrapal-data/trollbait1_0/"+person.screen_name+".json")
+                allusers.loc[allusers.screen_name==person.screen_name,'gotmentions']=True
+                allusers.loc[allusers.screen_name==person.screen_name,'nummentions']=len(last1000)
+                update_sheet()
+            except Exception as e:
+                logger.error("Could not write file /home/ananda/ab/xetrapal-data/trollbait1_0/"+person.screen_name+".json because "+repr(e))
+
+        else:
+            logger.info(person.screen_name+" already done cause "+ person.gotmentions)
+        
+
 
 ananda=xetrapal.Xetrapal(configfile="/home/ananda/ab/ab.conf")
 anandatw=ananda.get_twython()
@@ -110,6 +129,33 @@ anandagd=ananda.get_googledriver()
 twconfig=xetrapal.karma.get_section(ananda.config,"Twython")
 tweep=get_tweepy(twconfig)
 trollbaitsheet=anandagd.open_by_key(key="1zisiKnhF4cEW4H7fvhpZ7Y8cGfwQybvGgDg6Jnth5j4")
+allusers=trollbaitsheet.worksheet_by_title("allusers").get_as_df()
+men=trollbaitsheet.worksheet_by_title("men").get_as_df()
+women=trollbaitsheet.worksheet_by_title("women").get_as_df() 
+
+def update_sheet():
+    trollbaitsheet.worksheet_by_title("allusers").set_dataframe(allusers,(1,1))
+    
+def get_mentions():
+    anandakarta=ananda.start_pykka_karta()
+    anandakarta2=ananda.start_pykka_karta()
+    anandakarta.tell({'msg':'run','func':get_1000_mentions,'args':[anandatw,men],'kwargs':{"logger":ananda.logger}})
+    anandakarta2.tell({'msg':'run','func':get_1000_mentions,'args':[anandatw,women],'kwargs':{"logger":ananda.logger}})
+
+
+def get_ngrams():
+    anandakarta3=ananda.start_pykka_karta()
+    anandakarta4=ananda.start_pykka_karta()
+    anandakarta3.tell({'msg':'run','func':get_ngram_freq,'args':[men],'kwargs':{"logger":ananda.logger}})
+    anandakarta4.tell({'msg':'run','func':get_ngram_freq,'args':[women],'kwargs':{"logger":ananda.logger}})
+
+def get_ngram_freq(persondf,logger=xetrapal.astra.baselogger):
+    for person in tqdm(persondf.screen_name,position=2,desc="Getting Ngrams"):
+        with(open(os.path.join("/home/ananda/ab/xetrapal-data/trollbait1_0/",person+".json"),"r")) as f:
+            tweetdf=pandas.DataFrame(json.loads(f.read()))
+        p=ngramcounter(tweetdf.text)
+        p.to_csv(os.path.join("/home/ananda/ab/xetrapal-data/trollbait1_0/",person+"-freq.csv"),encoding="utf-8")
+
 
 
 '''

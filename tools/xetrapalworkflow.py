@@ -1,5 +1,6 @@
 import sys,os
 sys.path.append("/opt/xetrapal")
+sys.path.append("../lib")
 import xetrapal
 import tweepy
 import pandas
@@ -8,8 +9,9 @@ import math
 import json
 from sklearn.feature_extraction.text import CountVectorizer 
 from tqdm import tqdm
-sys.path.append("/opt/livingdata/lib")
 
+sys.path.append("/opt/livingdata/lib")
+from HindiTokenizer import Tokenizer
 
 def get_twitter_ts(string):
     return datetime.datetime.strptime(string.replace("+0000","UTC"),"%a %b %d %H:%M:%S %Z %Y")
@@ -122,17 +124,6 @@ def get_1000_mentions(tw,persondf,logger=xetrapal.astra.baselogger):
             logger.info(person.screen_name+" already done cause "+ person.gotmentions)
         
 
-
-ananda=xetrapal.Xetrapal(configfile="/home/ananda/ab/ab.conf")
-anandatw=ananda.get_twython()
-anandagd=ananda.get_googledriver()
-twconfig=xetrapal.karma.get_section(ananda.config,"Twython")
-tweep=get_tweepy(twconfig)
-trollbaitsheet=anandagd.open_by_key(key="1zisiKnhF4cEW4H7fvhpZ7Y8cGfwQybvGgDg6Jnth5j4")
-allusers=trollbaitsheet.worksheet_by_title("allusers").get_as_df()
-men=trollbaitsheet.worksheet_by_title("men").get_as_df()
-women=trollbaitsheet.worksheet_by_title("women").get_as_df() 
-
 def update_sheet():
     trollbaitsheet.worksheet_by_title("allusers").set_dataframe(allusers,(1,1))
     
@@ -156,7 +147,15 @@ def get_ngram_freq(persondf,logger=xetrapal.astra.baselogger):
         p=ngramcounter(tweetdf.text)
         p.to_csv(os.path.join("/home/ananda/ab/xetrapal-data/trollbait1_0/",person+"-freq.csv"),encoding="utf-8")
 
-
+ananda=xetrapal.Xetrapal(configfile="/home/ananda/ab/ab.conf")
+anandatw=ananda.get_twython()
+anandagd=ananda.get_googledriver()
+twconfig=xetrapal.karma.get_section(ananda.config,"Twython")
+tweep=get_tweepy(twconfig)
+trollbaitsheet=anandagd.open_by_key(key="1zisiKnhF4cEW4H7fvhpZ7Y8cGfwQybvGgDg6Jnth5j4")
+allusers=trollbaitsheet.worksheet_by_title("allusers").get_as_df()
+men=trollbaitsheet.worksheet_by_title("men").get_as_df()
+women=trollbaitsheet.worksheet_by_title("women").get_as_df() 
 
 '''
 p=build_userdf(tweep,userlist)

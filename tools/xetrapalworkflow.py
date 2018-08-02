@@ -109,17 +109,17 @@ def get_1000_mentions(tw,persondf,logger=xetrapal.astra.baselogger):
     for person in tqdm(persondf.itertuples(),position=1):
         if  allusers.loc[allusers.screen_name==person.screen_name,'gotmentions'].item()=="":
             logger.info("Getting 1000 mentions or max for "+person.screen_name)
-            last1000=xetrapal.twkarmas.twython_get_ntweets_for_search(tw,"@"+person.screen_name,logger=logger,tcount=1000)
+            last1000=xetrapal.twkarmas.twython_get_ntweets_for_search(tw,"@"+person.screen_name,logger=logger,tcount=500)
             try:
-                with open("/home/ananda/ab/xetrapal-data/trollbait1_0/"+person.screen_name+".json","w") as f:
-                    f.write(json.dumps(last1000))
-                logger.info("Wrote file /home/ananda/ab/xetrapal-data/trollbait1_0/"+person.screen_name+".json")
+                last1000.to_json("/home/ananda/ab/xetrapal-data/trollbait1_1/"+person.screen_name+".json",orient="split")
+                #with open("/home/ananda/ab/xetrapal-data/trollbait1_1/"+person.screen_name+".json","w") as f:
+                #    f.write(json.dumps(last1000.to_json(orient="split")))
+                logger.info("Wrote file /home/ananda/ab/xetrapal-data/trollbait1_1/"+person.screen_name+".json")
                 allusers.loc[allusers.screen_name==person.screen_name,'gotmentions']=True
                 allusers.loc[allusers.screen_name==person.screen_name,'nummentions']=len(last1000)
                 update_sheet()
             except Exception as e:
-                logger.error("Could not write file /home/ananda/ab/xetrapal-data/trollbait1_0/"+person.screen_name+".json because "+repr(e))
-
+                logger.error("Could not write file /home/ananda/ab/xetrapal-data/trollbait1_1/"+person.screen_name+".json because "+repr(e))
         else:
             logger.info(person.screen_name+" already done cause "+ person.gotmentions)
         
@@ -150,6 +150,7 @@ def get_ngram_freq(persondf,logger=xetrapal.astra.baselogger):
 ananda=xetrapal.Xetrapal(configfile="/home/ananda/ab/ab.conf")
 anandatw=ananda.get_twython()
 anandagd=ananda.get_googledriver()
+anandatweep=ananda.get_tweepy()
 twconfig=xetrapal.karma.get_section(ananda.config,"Twython")
 tweep=get_tweepy(twconfig)
 trollbaitsheet=anandagd.open_by_key(key="1zisiKnhF4cEW4H7fvhpZ7Y8cGfwQybvGgDg6Jnth5j4")
@@ -173,4 +174,9 @@ for man in men.screen_name:
     with open("/home/ananda/ab/xetrapal-data/trollbait1_0/"+man+".json","w") as f:
         f.write(json.dump(last500))
 '''
+def load_tweets_from_json(filename):
+    print filename
+    with open(filename,"r") as f:
+        tweetdf=pandas.DataFrame(json.loads(f.read()))
+    return tweetdf
 

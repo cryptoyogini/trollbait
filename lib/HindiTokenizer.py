@@ -27,7 +27,7 @@ class Tokenizer():
     def generate_sentences(self):
         '''generates a list of sentences'''
         text=self.text
-        #self.sentences=text.split(u"।")
+        #self.sentences=text.split(u"।") #Changed by ABN to include other delimiters. 
         self.sentences=re.split("\.|\?|।|!|\n",text)
     def print_sentences(self,sentences=None):
         if sentences:

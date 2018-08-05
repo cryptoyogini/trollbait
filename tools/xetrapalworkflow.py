@@ -105,13 +105,13 @@ def ngramcounter(series):
     freqdf=pandas.DataFrame(frequencies, index=word_vectorizer.get_feature_names(), columns=['freq']).sort_values(by='freq')
     return freqdf
 
-def get_1000_mentions(tw,persondf,logger=xetrapal.astra.baselogger):
+def get_n_mentions(tw,persondf,count,path,logger=xetrapal.astra.baselogger):
     for person in tqdm(persondf.itertuples(),position=1):
         if  allusers.loc[allusers.screen_name==person.screen_name,'gotmentions'].item()=="":
             logger.info("Getting 1000 mentions or max for "+person.screen_name)
-            last1000=xetrapal.twkarmas.twython_get_ntweets_for_search(tw,"@"+person.screen_name,logger=logger,tcount=500)
+            last1000=xetrapal.twkarmas.twython_get_ntweets_for_search(tw,"@"+person.screen_name,logger=logger,tcount=count)
             try:
-                last1000.to_json("/home/ananda/ab/xetrapal-data/trollbait1_1/"+person.screen_name+".json",orient="split")
+                last1000.to_json(os.path.join(path,person.screen_name+".json"),orient="split")
                 #with open("/home/ananda/ab/xetrapal-data/trollbait1_1/"+person.screen_name+".json","w") as f:
                 #    f.write(json.dumps(last1000.to_json(orient="split")))
                 logger.info("Wrote file /home/ananda/ab/xetrapal-data/trollbait1_1/"+person.screen_name+".json")
@@ -127,11 +127,11 @@ def get_1000_mentions(tw,persondf,logger=xetrapal.astra.baselogger):
 def update_sheet():
     trollbaitsheet.worksheet_by_title("allusers").set_dataframe(allusers,(1,1))
     
-def get_mentions():
+def get_mentions(count,path):
     anandakarta=ananda.start_pykka_karta()
     anandakarta2=ananda.start_pykka_karta()
-    anandakarta.tell({'msg':'run','func':get_1000_mentions,'args':[anandatw,men],'kwargs':{"logger":ananda.logger}})
-    anandakarta2.tell({'msg':'run','func':get_1000_mentions,'args':[anandatw,women],'kwargs':{"logger":ananda.logger}})
+    anandakarta.tell({'msg':'run','func':get_n_mentions,'args':[anandatw,men,count,path],'kwargs':{"logger":ananda.logger}})
+    anandakarta2.tell({'msg':'run','func':get_n_mentions,'args':[anandatw,women,count,path],'kwargs':{"logger":ananda.logger}})
 
 
 def get_ngrams():
@@ -142,11 +142,12 @@ def get_ngrams():
 
 def get_ngram_freq(persondf,logger=xetrapal.astra.baselogger):
     for person in tqdm(persondf.screen_name,position=2,desc="Getting Ngrams"):
-        with(open(os.path.join("/home/ananda/ab/xetrapal-data/trollbait1_0/",person+".json"),"r")) as f:
-            tweetdf=pandas.DataFrame(json.loads(f.read()))
-        p=ngramcounter(tweetdf.text)
-        p.to_csv(os.path.join("/home/ananda/ab/xetrapal-data/trollbait1_0/",person+"-freq.csv"),encoding="utf-8")
-
+        tweetdf=pandas.read_json("/home/ananda/ab/xetrapal-data/trollbait1_1/"+person+".json",orient="split")
+        if "full_text" in tweetdf.columns:
+            p=ngramcounter(tweetdf.full_text)
+            p.to_csv(os.path.join("/home/ananda/ab/xetrapal-data/trollbait1_1/",person+"-freq.csv"),encoding="utf-8")
+        else:
+            continue
 ananda=xetrapal.Xetrapal(configfile="/home/ananda/ab/ab.conf")
 anandatw=ananda.get_twython()
 anandagd=ananda.get_googledriver()

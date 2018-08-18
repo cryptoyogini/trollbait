@@ -9,6 +9,7 @@ import math
 import json
 from sklearn.feature_extraction.text import CountVectorizer 
 from tqdm import tqdm
+import collections
 
 sys.path.append("/opt/livingdata/lib")
 from HindiTokenizer import Tokenizer
@@ -148,6 +149,48 @@ def get_ngram_freq(persondf,logger=xetrapal.astra.baselogger):
             p.to_csv(os.path.join("/home/ananda/ab/xetrapal-data/trollbait1_1/",person+"-freq.csv"),encoding="utf-8")
         else:
             continue
+        
+
+def wordcount(text,logger=xetrapal.astra.baselogger):
+    #matches 30 reetitions or more of one character
+    #regex2 = re.compile(u'(^.{30,})')
+    #regex3 = re.compile(u'(\A\u002D)|(\u002D\Z)')
+    
+    # create dictionary to store word frequencies
+    wordFreq = collections.Counter()
+    
+    # process each file chunk
+   
+    
+    # remove special characters and anything beyond Unicode 382
+    #preCleanText = regex1.sub(' ', decodedText)
+    # parse text
+    #parsedText = re.split(' ', text)
+    t=Tokenizer(text)
+    logger.info("Beginning generate word count on input")
+    logger.info("Tokenizing the input")
+    t.tokenize()
+    parsedText = t.tokens
+    
+    # clean up and count word
+    while "" in parsedText:
+        parsedText.remove("")
+    for word in tqdm(parsedText):
+        # if word > 30 characters, leave out
+     #   if regex2.search(word):
+           # continue
+        # if word has trailing hyphens, fix
+      #  while regex3.search(word):
+      #     word = regex3.sub('', word)
+            
+        # if word is empty string, leave out
+        if word == '':
+            continue
+        # add word to count
+        wordFreq[word] += 1
+    
+    return wordFreq
+
 ananda=xetrapal.Xetrapal(configfile="/home/ananda/ab/ab.conf")
 anandatw=ananda.get_twython()
 anandagd=ananda.get_googledriver()
@@ -158,6 +201,9 @@ trollbaitsheet=anandagd.open_by_key(key="1zisiKnhF4cEW4H7fvhpZ7Y8cGfwQybvGgDg6Jn
 allusers=trollbaitsheet.worksheet_by_title("allusers").get_as_df()
 men=trollbaitsheet.worksheet_by_title("men").get_as_df()
 women=trollbaitsheet.worksheet_by_title("women").get_as_df() 
+
+
+
 
 '''
 p=build_userdf(tweep,userlist)

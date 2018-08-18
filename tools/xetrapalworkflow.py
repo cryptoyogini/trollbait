@@ -14,14 +14,18 @@ import collections
 sys.path.append("/opt/livingdata/lib")
 from HindiTokenizer import Tokenizer
 
+
+#To move into Xetrapal
 def get_twitter_ts(string):
     return datetime.datetime.strptime(string.replace("+0000","UTC"),"%a %b %d %H:%M:%S %Z %Y")
-    
+
+#To move into Xetrapal
 def get_age(createdts):
     now=datetime.datetime.now()
     age=now-createdts
     return math.ceil(age.total_seconds()/3600)
 
+#To =move into Xetrapal
 def get_mention_density(tw,screen_name,logger=xetrapal.astra.baselogger):
     last100=xetrapal.twkarmas.twython_get_ntweets_for_search(tw,"@"+screen_name,tcount=100)
     last100=pandas.DataFrame(last100)
@@ -39,7 +43,8 @@ def get_mention_density(tw,screen_name,logger=xetrapal.astra.baselogger):
         return round(density,3)
     else:
         return 0
-
+    
+#To move into Xetrapal
 def get_tweet_density(tw,screen_name,logger=xetrapal.astra.baselogger):
     last100=tw.get_user_timeline(screen_name=screen_name,count=100)
     last100=pandas.DataFrame(last100)
@@ -58,7 +63,7 @@ def get_tweet_density(tw,screen_name,logger=xetrapal.astra.baselogger):
     else:
         return 0
 
-
+#To move into Xetrapal
 def get_tweepy(twconfig,logger=xetrapal.astra.baselogger):
     app_key=twconfig.get("Twython",'app_key')
     app_secret=twconfig.get("Twython",'app_secret')
@@ -68,6 +73,7 @@ def get_tweepy(twconfig,logger=xetrapal.astra.baselogger):
     auth.set_access_token(oauth_token,oauth_token_secret)
     tweep=tweepy.API(auth)
     return tweep
+
 
 def build_userdf(tweep,userlist,logger=xetrapal.astra.baselogger):
     users=[]

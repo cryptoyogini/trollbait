@@ -212,12 +212,30 @@ def dump_all_tweets_to_txt(persondf,outfile,logger=xetrapal.astra.baselogger):
 
 currworkingdir=sys.argv[1]
 ananda=xetrapal.Xetrapal(configfile="/home/ananda/ab/ab.conf")
-anandatw=ananda.get_twython()
-anandagd=ananda.get_googledriver()
-anandatweep=ananda.get_tweepy()
-#twconfig=xetrapal.karma.get_section(ananda.config,"Twython")
-#tweep=get_tweepy(twconfig)
-trollbaitsheet=anandagd.open_by_key(key="1zisiKnhF4cEW4H7fvhpZ7Y8cGfwQybvGgDg6Jnth5j4")
-allusers=trollbaitsheet.worksheet_by_title("allusers").get_as_df()
-men=trollbaitsheet.worksheet_by_title("men").get_as_df()
-women=trollbaitsheet.worksheet_by_title("women").get_as_df() 
+with open("/home/ananda/womentweets.txt","r") as f:
+    womentweets=f.read()
+with open("/home/ananda/mentweets.txt","r") as f:
+    
+    mentweets=f.read()
+import re
+twitterhandlere=r'(@\w{1,15})\b'
+
+twitterhandle=re.compile(twitterhandlere)
+mentweetsnousers=re.sub(twitterhandlere,"",mentweets)
+womentweetsnousers=re.sub(twitterhandlere,"",womentweets)
+womentweetsnousers=re.sub(" +"," ",womentweetsnousers)
+mentweetsnousers=re.sub(" +"," ",mentweetsnousers)
+mentweetseries=pandas.Series(mentweetsnousers.split("\nENDOFTWEET\n"))
+womentweetseries=pandas.Series(womentweetsnousers.split("\nENDOFTWEET\n"))
+anandakarta1=ananda.start_pykka_karta()
+anandakarta2=ananda.start_pykka_karta()
+
+'''
+ngrammen=anandakarta1.ask({'msg':'run','func':ngramcounter,'args':[mentweetseries],'kwargs':{}},block=False)
+ngramwomen=anandakarta2.ask({'msg':'run','func':ngramcounter,'args':[womentweetseries],'kwargs':{}},block=False)
+ngrammen=ngrammen.get()
+ngrammen
+ngramwomen1=ngramwomen.get()
+ngramwomen1
+history
+'''

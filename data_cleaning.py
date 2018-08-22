@@ -30,6 +30,16 @@ pat1 = r'@[A-Za-z0-9]+'
 pat2 = r'https?://[A-Za-z0-9./]+'
 combined_pat = r'|'.join((pat1, pat2))
 
+
+def asli_tweet_cleaner(text):
+    twitterhandlere=r'(@\w{1,15})\b'
+    twitterhandle=re.compile(twitterhandlere)
+    linkre= r'https?://[A-Za-z0-9./]+'
+    link=re.compile(linkre)
+    outtext=text.replace(twitterhandle,"",text)
+    outtext=outtext.replace(link,"",text)
+    return outtext
+
 def tweet_cleaner(text):
     soup = BeautifulSoup(text, 'lxml')
     souped = soup.get_text()

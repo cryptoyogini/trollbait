@@ -39,7 +39,7 @@ def asli_tweet_cleaner(text):
     outtext=text.replace(twitterhandle,"",text)
     outtext=outtext.replace(link,"",text)
     return outtext
-
+'''
 def tweet_cleaner(text):
     soup = BeautifulSoup(text, 'lxml')
     souped = soup.get_text()
@@ -54,6 +54,7 @@ def tweet_cleaner(text):
     # I will tokenize and join together to remove unneccessary white spaces
     words = tok.tokenize(lower_case)
     return (" ".join(words)).strip()
+'''
 testing = a.tweets 
 result = []
 for t in testing:

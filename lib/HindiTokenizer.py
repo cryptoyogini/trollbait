@@ -70,7 +70,6 @@ class Tokenizer():
                 self.tokens.append(tok[1])
 
 
-
     def tokenize(self):
         '''done'''
         if not self.sentences:

@@ -14,18 +14,9 @@ import collections
 sys.path.append("/opt/livingdata/lib")
 from HindiTokenizer import Tokenizer
 
-        
+
 
 def wordcount(text,logger=xetrapal.astra.baselogger):
-    #matches 30 reetitions or more of one character
-    #regex2 = re.compile(u'(^.{30,})')
-    #regex3 = re.compile(u'(\A\u002D)|(\u002D\Z)')
-    # create dictionary to store word frequencies
-    # process each file chunk 
-    # remove special characters and anything beyond Unicode 382
-    #preCleanText = regex1.sub(' ', decodedText)
-    # parse text
-    #parsedText = re.split(' ', text)
     wordFreq = collections.Counter()
     t=Tokenizer(text)
     logger.info("Beginning generate word count on input")
@@ -48,6 +39,23 @@ def load_tweets_from_json(filename):
     with open(filename,"r") as f:
         tweetdf=pandas.DataFrame(json.loads(f.read()))
     return tweetdf
+
+
+def wordcountfile(filename):
+	with open(filename,"r") as f:
+		filetxt=f.read()
+	wc=wordcount(filetxt.replace("\nENDOFTWEET\n","\n"))
+	wcdf=pandas.DataFrame.from_dict(wc,orient="index").reset_index()
+	wcdf=wcdf.rename(columns={'index':'word',0:'count'})
+	return wcdf
+	
+def wordcountmulti(inpath,outpath,logger=xetrapal.astra.baselogger):
+	for filename in os.listdir(inpath):
+		logger.info("Working on file " + filename)
+		wcdf=wordcountfile(os.path.join(inpath,filename))
+		wcdf.to_csv(os.path.join(outpath,filename.rstrip(".txt")+"-wordcount.csv"),encoding="utf-8")
+	
+
 
 def dump_all_tweets_to_txt(persondf,outfile,logger=xetrapal.astra.baselogger):
 	for person in persondf.screen_name:

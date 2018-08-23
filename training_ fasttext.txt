@@ -1,0 +1,18 @@
+https://fasttext.cc/docs/en/supervised-tutorial.htmlcd fastText-0.1.0/
+
+
+$ git clone https://github.com/facebookresearch/fastText.git
+$ cd fastText
+$ make
+
+
+$ ./fasttext predict model_tweets.bin trollbait/test.txt > res_k.txt 
+$ cd 
+$ cd fastText-0.1.0/
+$ ./fasttext predict model_tweets.bin input_s.txt > res_s.txt 
+$ ./fasttext predict-prob model_tweets.bin input_s.txt > res_s.txt 
+$ ./fasttext predict-prob model_tweets.bin trollbait/test.txt > res_k.txt
+$ history
+
+
+

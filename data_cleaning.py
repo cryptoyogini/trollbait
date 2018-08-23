@@ -36,8 +36,8 @@ def asli_tweet_cleaner(text):
     twitterhandle=re.compile(twitterhandlere)
     linkre= r'https?://[A-Za-z0-9./]+'
     link=re.compile(linkre)
-    outtext=text.replace(twitterhandle,"",text)
-    outtext=outtext.replace(link,"",text)
+    outtext=re.sub(twitterhandle,"",text)
+    outtext=re.sub(link,"",outtext)
     return outtext
 '''
 def tweet_cleaner(text):

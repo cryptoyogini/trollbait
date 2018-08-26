@@ -214,3 +214,12 @@ len(kunalcleantweets5000)
 len(kanhaiyacleantweets5000)
 len(uumarcleantweets5000)
 len(umarcleantweets5000)
+logger.info("Re-running the file to load the word counter functions")
+%run xetrapalworkflow-final.py
+clear
+inpath="/home/ananda/trollbaitpass2/txt/"
+outpath="/home/ananda/trollbaitpass2/csv/"
+logger.info("Re-running the file to load the word counter functions")
+%run xetrapalworkflow-final.py
+clear
+wordcountmulti(inpath,outpath,logger=ananda.logger)

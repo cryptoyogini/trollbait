@@ -187,7 +187,7 @@ def hasmarker(text,markerlist):
 	for marker in markerlist:
 		if marker in text.lower():
 			return marker
-	return None
+	return "NONE"
 
 def tweet_cleaner(text):
     twitterhandlere=r'(@\w{1,15})\b'
